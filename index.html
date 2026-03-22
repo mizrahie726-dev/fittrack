@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#1E3A5F">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="FitTrack">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>FitTrack</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--p:#1E3A5F;--pl:#2C5282;--a:#3B82F6;--al:#EFF6FF;--am:#BFDBFE;--ok:#059669;--okl:#ECFDF5;--wn:#D97706;--wnl:#FFFBEB;--er:#DC2626;--erl:#FEF2F2;--t:#111827;--t2:#6B7280;--t3:#9CA3AF;--bg:#F3F4F6;--s:#fff;--bd:#E5E7EB;--bdl:#F9FAFB;--r:16px;--rs:10px;--sh:0 1px 3px rgba(0,0,0,.07),0 1px 2px rgba(0,0,0,.04)}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;font-family:'Heebo',sans-serif;color:var(--t);background:var(--bg);overflow:hidden;-webkit-font-smoothing:antialiased}
+#sp{position:fixed;inset:0;background:var(--p);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;transition:opacity .5s,visibility .5s}
+#sp.gone{opacity:0;visibility:hidden;pointer-events:none}
+.sp-logo{width:76px;height:76px;background:var(--pl);border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:700;color:#fff;margin-bottom:14px;box-shadow:0 8px 24px rgba(0,0,0,.3)}
+.sp-n{font-size:24px;font-weight:700;color:#fff}.sp-s{font-size:12px;color:rgba(255,255,255,.45);margin-top:3px}
+.sp-spin{margin-top:34px;width:26px;height:26px;border:3px solid rgba(255,255,255,.2);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.app{display:flex;flex-direction:column;height:100dvh;max-width:430px;margin:0 auto;background:var(--bg)}
+.hdr{background:var(--p);padding:48px 18px 14px;flex-shrink:0}
+.hdr-in{display:flex;justify-content:space-between;align-items:center}
+.hdr-g{font-size:11px;color:rgba(255,255,255,.45);margin-bottom:1px}
+.hdr-n{font-size:18px;font-weight:700;color:#fff;letter-spacing:-.3px}
+.hdr-r{display:flex;align-items:center;gap:8px}
+.hdr-d{background:rgba(255,255,255,.12);border-radius:20px;padding:4px 11px;font-size:11px;color:rgba(255,255,255,.7)}
+.av{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.2);border:2px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;cursor:pointer;flex-shrink:0}
+.scrl{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:14px 14px calc(76px + env(safe-area-inset-bottom))}
+.scrl::-webkit-scrollbar{display:none}
+.pg{display:none}.pg.on{display:block;animation:up .18s ease}
+@keyframes up{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:var(--s);border-top:1px solid var(--bd);display:flex;padding:7px 0 calc(7px + env(safe-area-inset-bottom));z-index:100;box-shadow:0 -2px 10px rgba(0,0,0,.05)}
+.nb{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:3px 0;background:none;border:none;cursor:pointer}
+.ni{font-size:19px}.nl{font-size:10px;color:var(--t3);font-weight:500;transition:color .15s}
+.nb.on .nl{color:var(--a)}.nd{width:4px;height:4px;border-radius:50%;background:var(--a);opacity:0;transition:opacity .15s;margin:1px auto 0}
+.nb.on .nd{opacity:1}
+.card{background:var(--s);border-radius:var(--r);border:1px solid var(--bd);box-shadow:var(--sh);margin-bottom:11px;overflow:hidden}
+.ch{display:flex;justify-content:space-between;align-items:center;padding:12px 15px 8px}
+.ct{font-size:11px;font-weight:700;color:var(--t3);letter-spacing:.7px;text-transform:uppercase}
+.ca{font-size:13px;color:var(--a);font-weight:600;cursor:pointer}
+.cb{padding:0 15px 14px}
+.cal-top{display:flex;align-items:center;gap:14px;padding:12px 15px}
+.rw{position:relative;flex-shrink:0}
+.rc{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.rn{font-size:18px;font-weight:700;color:var(--p);line-height:1}
+.ru{font-size:10px;color:var(--t3)}
+.cst{flex:1;display:flex;flex-direction:column;gap:6px}
+.csr{display:flex;justify-content:space-between}
+.csl{font-size:12px;color:var(--t2)}.csv{font-size:12px;font-weight:600;color:var(--p)}
+.macr{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--bd);border-top:1px solid var(--bd)}
+.mc{background:var(--s);padding:9px 4px;text-align:center}
+.mv{font-size:13px;font-weight:700;line-height:1}.mv small{font-size:9px;font-weight:400;color:var(--t3)}
+.ml{font-size:10px;color:var(--t3);margin-top:2px;font-weight:500}
+.chips{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-bottom:11px}
+.chip{background:var(--s);border:1px solid var(--bd);border-radius:var(--r);padding:10px 7px;text-align:center;box-shadow:var(--sh)}
+.cv{font-size:18px;font-weight:700;color:var(--p);line-height:1}.cv span{font-size:10px;font-weight:400;color:var(--t2)}
+.cl{font-size:10px;color:var(--t3);margin-top:3px;font-weight:500}
+.cpr{height:3px;background:var(--bd);border-radius:2px;margin-top:6px;overflow:hidden}
+.cpf{height:100%;border-radius:2px}
+.li{display:flex;align-items:center;gap:10px;padding:10px 15px;border-bottom:1px solid var(--bdl)}
+.li:last-child{border-bottom:none}
+.lic{width:35px;height:35px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.bbl{background:var(--al)}.bbn{background:var(--okl)}.bby{background:var(--wnl)}
+.lii{flex:1;min-width:0}.lin{font-size:14px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lis{font-size:11px;color:var(--t3);margin-top:1px}
+.lir{text-align:left;flex-shrink:0}.liv{font-size:13px;font-weight:600;color:var(--p)}.liu{font-size:10px;color:var(--t3)}
+.ldl{background:none;border:none;color:var(--t3);font-size:15px;cursor:pointer;padding:4px;opacity:.4}
+.ldl:active{opacity:1;color:var(--er)}
+.bdg{display:inline-flex;align-items:center;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:600}
+.bdb{background:var(--al);color:var(--a)}.bdg2{background:var(--okl);color:var(--ok)}.bdy{background:var(--wnl);color:var(--wn)}
+.pb{height:5px;background:var(--bd);border-radius:3px;overflow:hidden}
+.pbf{height:100%;border-radius:3px;transition:width .5s}
+.wb{padding:2px 15px 14px}
+.wdr{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:11px}
+.wd{width:22px;height:22px;border-radius:0 50% 50% 50%;transform:rotate(-45deg);border:2px solid var(--bd);background:var(--bdl);transition:all .2s}
+.wd.on{background:var(--a);border-color:var(--a)}
+.wbs{display:flex;gap:7px}
+.wbtn{flex:1;padding:8px 2px;background:var(--al);color:var(--a);border:1px solid var(--am);border-radius:var(--rs);font-size:11px;font-weight:600;cursor:pointer;font-family:'Heebo',sans-serif;line-height:1.5;text-align:center}
+.wbtn:active{background:var(--am)}
+.stk{background:linear-gradient(135deg,var(--p),var(--pl));border-radius:var(--r);padding:14px 18px;margin-bottom:11px;display:flex;align-items:center;gap:13px;box-shadow:0 4px 14px rgba(0,0,0,.12)}
+.sti{font-size:28px}.stn{font-size:34px;font-weight:700;color:#fff;line-height:1}
+.stl{font-size:12px;font-weight:600;color:rgba(255,255,255,.9)}.sts{font-size:11px;color:rgba(255,255,255,.45);margin-top:2px}
+.hday{padding:10px 15px;border-bottom:1px solid var(--bdl)}
+.hday:last-child{border-bottom:none}
+.hdr2{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+.hdate{font-size:13px;font-weight:600}.hcal{font-size:13px;font-weight:600;color:var(--a)}
+.gi{padding:10px 15px;border-bottom:1px solid var(--bdl)}.gi:last-child{border-bottom:none}
+.gr{display:flex;justify-content:space-between;margin-bottom:5px}
+.gn{font-size:14px;font-weight:500}.gp{font-size:13px;font-weight:600}
+.bc{display:flex;align-items:flex-end;gap:4px;height:85px;padding-top:6px}
+.bcol{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;height:100%;justify-content:flex-end}
+.bbar{width:100%;border-radius:4px 4px 0 0;min-height:2px}.bday{font-size:10px;color:var(--t3)}
+.fab{position:fixed;bottom:calc(76px + env(safe-area-inset-bottom));right:max(calc(50vw - 215px + 14px),14px);width:48px;height:48px;background:var(--a);border:none;border-radius:50%;cursor:pointer;box-shadow:0 4px 14px rgba(59,130,246,.4);display:flex;align-items:center;justify-content:center;z-index:99;transition:transform .15s}
+.fab:active{transform:scale(.92)}.fab svg{width:22px;height:22px}
+.ovl{display:none;position:fixed;inset:0;background:rgba(17,24,39,.45);z-index:200;backdrop-filter:blur(3px);align-items:flex-end;justify-content:center}
+.ovl.on{display:flex}
+.mdl{background:var(--s);border-radius:20px 20px 0 0;width:100%;max-width:430px;padding:5px 17px calc(16px + env(safe-area-inset-bottom));animation:sup .26s cubic-bezier(.32,.72,0,1);max-height:88dvh;overflow-y:auto}
+@keyframes sup{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.mh{width:30px;height:4px;background:var(--bd);border-radius:2px;margin:9px auto 13px}
+.mt{font-size:17px;font-weight:700;color:var(--p);margin-bottom:13px}
+.fsr{position:relative;margin-bottom:13px}
+.fsr input{width:100%;background:var(--bg);border:1.5px solid var(--bd);border-radius:var(--rs);padding:10px 12px;color:var(--t);font-size:14px;font-family:'Heebo',sans-serif;outline:none;transition:border-color .15s}
+.fsr input:focus{border-color:var(--a);background:#fff}
+.frs{position:absolute;top:calc(100% + 3px);right:0;left:0;background:var(--s);border:1px solid var(--bd);border-radius:var(--rs);box-shadow:0 8px 24px rgba(0,0,0,.12);z-index:10;max-height:210px;overflow-y:auto;display:none}
+.frs.on{display:block}
+.fri{padding:9px 13px;cursor:pointer;border-bottom:1px solid var(--bdl)}
+.fri:last-child{border-bottom:none}.fri:active{background:var(--al)}
+.frn{font-size:14px;font-weight:500}.frs2{font-size:11px;color:var(--t3);margin-top:1px}
+.fld{margin-bottom:10px}
+.fl{display:block;font-size:11px;font-weight:700;color:var(--t3);letter-spacing:.5px;text-transform:uppercase;margin-bottom:5px}
+.inp{width:100%;background:var(--bg);border:1.5px solid var(--bd);border-radius:var(--rs);padding:10px 12px;color:var(--t);font-size:14px;font-family:'Heebo',sans-serif;outline:none;transition:border-color .15s,background .15s}
+.inp:focus{border-color:var(--a);background:#fff}.inp::placeholder{color:var(--t3)}
+.ig{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.ig3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.ttabs{display:flex;background:var(--bg);border-radius:var(--rs);padding:3px;margin-bottom:12px;gap:2px;border:1px solid var(--bd)}
+.tt{flex:1;padding:6px 2px;border-radius:7px;border:none;background:transparent;font-size:11px;font-weight:500;color:var(--t2);cursor:pointer;font-family:'Heebo',sans-serif;transition:all .15s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tt.on{background:var(--s);color:var(--p);font-weight:700;box-shadow:var(--sh)}
+.subbtn{width:100%;padding:12px;background:var(--a);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:600;font-family:'Heebo',sans-serif;cursor:pointer;margin-top:5px;transition:opacity .15s}
+.subbtn:active{opacity:.85}
+.slbl{font-size:11px;font-weight:700;color:var(--t3);letter-spacing:.8px;text-transform:uppercase;margin:14px 0 7px}
+.tgl{width:42px;height:22px;background:var(--bd);border-radius:11px;position:relative;cursor:pointer;transition:background .2s;flex-shrink:0}
+.tgl.on{background:var(--a)}
+.tgl::after{content:'';position:absolute;width:16px;height:16px;background:#fff;border-radius:50%;top:3px;right:3px;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.tgl.on::after{transform:translateX(-20px)}
+.srow{display:flex;justify-content:space-between;align-items:center;padding:11px 15px;border-bottom:1px solid var(--bdl)}
+.srow:last-child{border-bottom:none}
+.srlbl{font-size:14px;font-weight:500}
+.bmrb{background:var(--al);border-radius:var(--rs);padding:11px 14px;margin:2px 0 10px;display:flex;justify-content:space-between;align-items:center}
+.bmrl{font-size:12px;color:var(--t2)}.bmrv{font-size:16px;font-weight:700;color:var(--p)}
+.divider{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.divider-line{flex:1;height:1px;background:var(--bd)}
+.divider-txt{font-size:11px;color:var(--t3);white-space:nowrap}
+.notice{border-radius:var(--r);padding:11px 14px;margin-bottom:11px;font-size:13px;display:flex;align-items:center;gap:8px}
+.nok{background:var(--okl);border:1px solid #6EE7B7;color:var(--ok)}
+.empty{text-align:center;padding:18px 14px;color:var(--t3);font-size:13px}
+.empty-i{font-size:26px;margin-bottom:5px}
+.ibox{background:var(--al);border:1px solid var(--am);border-radius:var(--r);padding:12px 14px;margin-bottom:10px;font-size:13px;color:var(--t2);line-height:1.7}
+.ibox strong{color:var(--p)}
+.rfood{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}
+.rfitem{padding:5px 11px;background:var(--bg);border:1px solid var(--bd);border-radius:999px;font-size:12px;cursor:pointer;font-weight:500;transition:all .15s;white-space:nowrap}
+.rfitem:active{background:var(--al);border-color:var(--am);color:var(--a)}
+.qty-row{display:flex;align-items:center;gap:8px;background:var(--bg);border-radius:var(--rs);padding:9px 12px;margin-bottom:10px}
+.qty-lbl{font-size:13px;color:var(--t2);flex:1}
+.qty-u{font-size:12px;color:var(--t2)}
+
+#profileScreen{position:fixed;inset:0;background:var(--p);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:8888;padding:24px}
+#profileScreen.gone{display:none}
+.ps-logo{width:70px;height:70px;background:var(--pl);border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;color:#fff;margin-bottom:12px}
+.ps-title{font-size:20px;font-weight:700;color:#fff;margin-bottom:4px}
+.ps-sub{font-size:13px;color:rgba(255,255,255,.5);margin-bottom:28px}
+.ps-cards{display:flex;gap:14px;width:100%;max-width:300px}
+.ps-card{flex:1;background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.2);border-radius:var(--r);padding:18px 10px;text-align:center;cursor:pointer;transition:all .2s}
+.ps-card.sel{background:rgba(255,255,255,.22);border-color:rgba(255,255,255,.7)}
+.ps-av{width:48px;height:48px;border-radius:50%;margin:0 auto 8px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:#fff}
+.ps-nm{font-size:14px;font-weight:600;color:#fff}
+.ps-btn{margin-top:22px;width:100%;max-width:300px;padding:13px;background:#fff;color:var(--p);border:none;border-radius:var(--rs);font-size:15px;font-weight:700;font-family:'Heebo',sans-serif;cursor:pointer}
+.sw-btn{display:flex;align-items:center;gap:5px;background:rgba(255,255,255,.12);border:none;border-radius:20px;padding:4px 10px;cursor:pointer;font-family:'Heebo',sans-serif}
+.wt-row{display:flex;align-items:center;gap:10px;padding:9px 15px;border-bottom:1px solid var(--bdl)}
+.wt-row:last-child{border-bottom:none}
+.wt-date{font-size:12px;color:var(--t3);width:68px;flex-shrink:0}
+.wt-val{font-size:14px;font-weight:700;color:var(--p)}
+.wt-up{color:var(--er);font-size:12px;font-weight:600}
+.wt-dn{color:var(--ok);font-size:12px;font-weight:600}
+.ws-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:14px 15px}
+.ws-item{background:var(--bg);border-radius:var(--rs);padding:10px;text-align:center}
+.ws-val{font-size:19px;font-weight:700;color:var(--p);line-height:1}
+.ws-lbl{font-size:10px;color:var(--t3);margin-top:3px}
+.ach-grid{display:flex;flex-wrap:wrap;gap:8px;padding:12px 15px}
+.ach{display:flex;flex-direction:column;align-items:center;gap:3px;width:calc(25% - 6px)}
+.ach-ic{font-size:24px;filter:grayscale(1);opacity:.3;transition:all .3s}
+.ach-ic.ok{filter:none;opacity:1}
+.ach-nm{font-size:10px;color:var(--t3);text-align:center;line-height:1.3}
+.ach-nm.ok{color:var(--p);font-weight:600}
+.fav-btn{background:none;border:none;font-size:14px;cursor:pointer;padding:2px;opacity:.3;line-height:1}
+.fav-btn.on{opacity:1}
+.quote-box{background:linear-gradient(135deg,var(--p),var(--pl));border-radius:var(--r);padding:13px 15px;margin-bottom:11px}
+.quote-txt{font-size:13px;color:rgba(255,255,255,.9);line-height:1.6;font-style:italic}
+.quote-src{font-size:11px;color:rgba(255,255,255,.45);margin-top:3px}
+.copy-btn{width:100%;padding:9px;background:var(--bg);border:1.5px dashed var(--bd);border-radius:var(--rs);color:var(--t2);font-size:13px;font-weight:500;cursor:pointer;font-family:'Heebo',sans-serif;margin-bottom:11px}
+.rfood{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:10px}
+.rfitem{padding:4px 10px;background:var(--bg);border:1px solid var(--bd);border-radius:999px;font-size:12px;cursor:pointer;font-weight:500}
+</style>
+</head>
+<body>
+
+<div id="sp">
+  <div class="sp-logo">FT</div>
+  <div class="sp-n">FitTrack</div>
+  <div class="sp-s">מעקב תזונה ואימונים</div>
+  <div class="sp-spin"></div>
+</div>
+
+<div id="profileScreen">
+  <div class="ps-logo">FT</div>
+  <div class="ps-title">FitTrack</div>
+  <div class="ps-sub">מי אתה היום?</div>
+  <div class="ps-cards">
+    <div class="ps-card sel" id="ps-eli" onclick="selProf('eli')">
+      <div class="ps-av" style="background:rgba(59,130,246,.6)">א</div>
+      <div class="ps-nm">אלי</div>
+    </div>
+    <div class="ps-card" id="ps-rotem" onclick="selProf('rotem')">
+      <div class="ps-av" style="background:rgba(236,72,153,.6)">ר</div>
+      <div class="ps-nm">רותם</div>
+    </div>
+  </div>
+  <button class="ps-btn" onclick="enterApp()">כנס ←</button>
+</div>
+<div class="app">
+  <div class="hdr">
+    <div class="hdr-in">
+      <div><div class="hdr-g" id="greet">שלום,</div><div class="hdr-n" id="hdrN">טוען...</div></div>
+      <div class="hdr-r"><div class="hdr-d" id="hdrDate"></div><button class="sw-btn" onclick="showPS()"><span id="avLtr" style="font-size:13px;font-weight:700;color:#fff">?</span><span id="avNm" style="font-size:11px;color:rgba(255,255,255,.7)"></span></button></div>
+    </div>
+  </div>
+
+  <div class="scrl" id="scrl">
+
+    <!-- HOME -->
+    <div class="pg on" id="pg-home">
+      <div class="quote-box"><div class="quote-txt" id="qTxt"></div><div class="quote-src" id="qSrc"></div></div>
+      <div id="dayNotice" class="notice nok" style="display:none">🌅 <span>יום חדש התחיל — הנתונים אופסו. בהצלחה!</span></div>
+
+      <div class="card">
+        <div class="ch"><div class="ct">קלוריות היום</div><span class="bdg bdb" id="calPct">0%</span></div>
+        <div class="cal-top">
+          <div class="rw">
+            <svg width="88" height="88" viewBox="0 0 88 88" style="transform:rotate(-90deg)">
+              <circle cx="44" cy="44" r="36" fill="none" stroke="#E5E7EB" stroke-width="8"/>
+              <circle cx="44" cy="44" r="36" fill="none" stroke="#3B82F6" stroke-width="8" stroke-linecap="round" stroke-dasharray="226.19" stroke-dashoffset="226.19" id="calRing" style="transition:stroke-dashoffset .6s"/>
+            </svg>
+            <div class="rc"><div class="rn" id="calN">0</div><div class="ru">קל'</div></div>
+          </div>
+          <div class="cst">
+            <div class="csr"><span class="csl">יעד</span><span class="csv" id="goalD">—</span></div>
+            <div class="csr"><span class="csl">נשרפו</span><span class="csv" style="color:var(--ok)" id="burnD">0 קל'</span></div>
+            <div class="csr"><span class="csl">נותרו</span><span class="csv" id="remD">—</span></div>
+          </div>
+        </div>
+        <div class="macr">
+          <div class="mc"><div class="mv" style="color:var(--a)" id="mP">0<small>g</small></div><div class="ml">חלבון</div></div>
+          <div class="mc"><div class="mv" style="color:var(--wn)" id="mC">0<small>g</small></div><div class="ml">פחמימות</div></div>
+          <div class="mc"><div class="mv" style="color:var(--er)" id="mF">0<small>g</small></div><div class="ml">שומן</div></div>
+          <div class="mc"><div class="mv" style="color:#7C3AED" id="mW">0<small>L</small></div><div class="ml">שתייה</div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="ch"><div class="ct">ארוחות</div><div class="ca" onclick="openMeal()">+ הוסף</div></div>
+        <div id="mealList"><div class="empty"><div class="empty-i">🍽️</div>אין ארוחות עדיין היום</div></div>
+      </div>
+
+      <div class="card">
+        <div class="ch"><div class="ct">שתייה</div><span class="bdg bdb" id="wBdg">0 / 0 ל'</span></div>
+        <div class="wb">
+          <div class="wdr" id="wDrops"></div>
+          <div class="wbs">
+            <button class="wbtn" onclick="addWater(.25)">+ כוס<br><small style="opacity:.6;font-weight:400">250ml</small></button>
+            <button class="wbtn" onclick="addWater(.5)">+ בקבוק<br><small style="opacity:.6;font-weight:400">500ml</small></button>
+            <button class="wbtn" onclick="addWater(1)">+ ליטר<br><small style="opacity:.6;font-weight:400">1000ml</small></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="ch"><div class="ct">אימון היום</div><div class="ca" onclick="openWorkout()">+ הוסף</div></div>
+        <div id="todayWk"><div class="empty"><div class="empty-i">💪</div>אין אימון מתועד היום</div></div>
+      </div>
+    </div>
+
+    <!-- WORKOUT -->
+    <div class="pg" id="pg-workout">
+      <div class="stk">
+        <div class="sti">🔥</div><div class="stn" id="stN">0</div>
+        <div><div class="stl" id="stL">ימי רצף</div><div class="sts" id="stS">התחל לאמן היום!</div></div>
+      </div>
+      <div class="chips">
+        <div class="chip"><div class="cv" id="wkCnt">0</div><div class="cl">אימונים השבוע</div><div class="cpr"><div class="cpf" id="wkBar" style="background:var(--a)"></div></div></div>
+        <div class="chip"><div class="cv" id="wkMin">0<span>m</span></div><div class="cl">דקות</div></div>
+        <div class="chip"><div class="cv" id="wkBrn">0</div><div class="cl">קל' נשרפו</div></div>
+      </div>
+      <div class="card">
+        <div class="ch"><div class="ct">אימונים השבוע</div><div class="ca" onclick="openWorkout()">+ הוסף</div></div>
+        <div id="wkList"><div class="empty"><div class="empty-i">🏋️</div>אין אימונים השבוע</div></div>
+      </div>
+    </div>
+
+    <!-- HISTORY -->
+    <div class="pg" id="pg-history">
+      <div class="card">
+        <div class="ch"><div class="ct">סיכום שבועי</div><span class="bdg bdb" id="wkRange"></span></div>
+        <div class="ws-grid">
+          <div class="ws-item"><div class="ws-val" id="wsC">—</div><div class="ws-lbl">ממוצע קל' יומי</div></div>
+          <div class="ws-item"><div class="ws-val" id="wsW">—</div><div class="ws-lbl">אימונים</div></div>
+          <div class="ws-item"><div class="ws-val" id="wsP">—</div><div class="ws-lbl">ממוצע חלבון g</div></div>
+          <div class="ws-item"><div class="ws-val" id="wsWt">—</div><div class="ws-lbl">ממוצע שתייה L</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="ch"><div class="ct">מגמת משקל</div><div class="ca" onclick="logWt()">עדכן</div></div>
+        <div class="cb"><div class="bc" id="wtChart" style="height:90px"></div><div id="wtList" style="margin-top:6px"></div></div>
+      </div>
+      <div class="card">
+        <div class="ch"><div class="ct">הישגים</div><span class="bdg bdb" id="achCnt">0</span></div>
+        <div class="ach-grid" id="achGrid"></div>
+      </div>
+      <div class="card">
+        <div class="ch"><div class="ct">יומן יומי</div><span class="bdg bdb" id="histCnt">0 ימים</span></div>
+        <div id="histList"><div class="empty"><div class="empty-i">📅</div>בסוף כל יום הנתונים ישמרו כאן</div></div>
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="pg" id="pg-stats">
+      <div class="card">
+        <div class="ch"><div class="ct">קלוריות — 7 ימים</div></div>
+        <div class="cb"><div class="bc" id="calChart"></div></div>
+      </div>
+      <div class="card">
+        <div class="ch"><div class="ct">חלבון — 7 ימים</div></div>
+        <div class="cb"><div class="bc" id="protChart"></div></div>
+      </div>
+      <div class="card">
+        <div class="ch"><div class="ct">התקדמות יעדים — היום</div></div>
+        <div class="gi"><div class="gr"><span class="gn">קלוריות</span><span class="gp" style="color:var(--a)" id="sCP">0%</span></div><div class="pb"><div class="pbf" id="sCB" style="background:var(--a)"></div></div></div>
+        <div class="gi"><div class="gr"><span class="gn">חלבון</span><span class="gp" style="color:var(--ok)" id="sPP">0%</span></div><div class="pb"><div class="pbf" id="sPB" style="background:var(--ok)"></div></div></div>
+        <div class="gi"><div class="gr"><span class="gn">שתייה</span><span class="gp" style="color:#7C3AED" id="sWP">0%</span></div><div class="pb"><div class="pbf" id="sWB" style="background:#7C3AED"></div></div></div>
+        <div class="gi"><div class="gr"><span class="gn">אימונים השבוע</span><span class="gp" style="color:var(--a)" id="sKP">0%</span></div><div class="pb"><div class="pbf" id="sKB" style="background:var(--a)"></div></div></div>
+      </div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div class="pg" id="pg-settings">
+      <div class="slbl">פרופיל אישי</div>
+      <div class="card"><div class="cb" style="padding-top:14px">
+        <div class="ig"><div class="fld"><label class="fl">שם</label><input class="inp" id="sName" oninput="saveProf()"></div><div class="fld"><label class="fl">גיל</label><input class="inp" type="number" id="sAge" oninput="saveProf()"></div></div>
+        <div class="ig"><div class="fld"><label class="fl">משקל (ק"ג)</label><input class="inp" type="number" id="sWt" oninput="saveProf()"></div>
+        <div class="fld"><label class="fl">יעד משקל (ק"ג)</label><input class="inp" type="number" id="sWtG" placeholder="75" oninput="saveProf()"></div><div class="fld"><label class="fl">גובה (ס"מ)</label><input class="inp" type="number" id="sHt" oninput="saveProf()"></div></div>
+        <div class="fld"><label class="fl">מין</label>
+          <div class="ttabs" id="gTab"><button class="tt on" data-v="m" onclick="pickTab(this,'gTab');saveProf()">זכר</button><button class="tt" data-v="f" onclick="pickTab(this,'gTab');saveProf()">נקבה</button></div>
+        </div>
+        <div class="fld"><label class="fl">רמת פעילות</label>
+          <select class="inp" id="sAct" onchange="saveProf()">
+            <option value="1.2">יושבני (כמעט ללא פעילות)</option>
+            <option value="1.375">קל (1-3 פעמים בשבוע)</option>
+            <option value="1.55" selected>מתון (3-5 פעמים)</option>
+            <option value="1.725">אינטנסיבי (6-7 פעמים)</option>
+            <option value="1.9">מאוד אינטנסיבי</option>
+          </select>
+        </div>
+        <div class="bmrb"><div class="bmrl">קלוריות מומלצות יומי (TDEE)</div><div class="bmrv" id="tdeeV">—</div></div>
+        <button class="subbtn" style="background:var(--p)" onclick="applyTDEE()">הגדר כיעד קלורי</button>
+      </div></div>
+
+      <div class="slbl">יעדים יומיים</div>
+      <div class="card"><div class="cb" style="padding-top:14px">
+        <div class="fld"><label class="fl">קלוריות יומיות</label><input class="inp" type="number" id="gCal" oninput="saveGoals()"></div>
+        <div class="ig"><div class="fld"><label class="fl">חלבון (g)</label><input class="inp" type="number" id="gProt" oninput="saveGoals()"></div><div class="fld"><label class="fl">פחמימות (g)</label><input class="inp" type="number" id="gCarb" oninput="saveGoals()"></div></div>
+        <div class="ig"><div class="fld"><label class="fl">שומן (g)</label><input class="inp" type="number" id="gFat" oninput="saveGoals()"></div><div class="fld"><label class="fl">שתייה (ל')</label><input class="inp" type="number" id="gWat" step=".5" oninput="saveGoals()"></div></div>
+        <div class="fld" style="margin:0"><label class="fl">אימונים בשבוע</label><input class="inp" type="number" id="gWk" oninput="saveGoals()"></div>
+      </div></div>
+
+      <div class="slbl">התקנה</div>
+      <div class="ibox"><strong>iPhone (Safari):</strong> לחץ ⬆️ ← "הוסף למסך הבית"<br><strong>Android (Chrome):</strong> תפריט ⋮ ← "הוסף למסך הבית"</div>
+      <div id="pwaW" style="display:none;margin-bottom:11px"><button class="subbtn" id="pwaBtn">התקן אפליקציה</button></div>
+
+      <div class="slbl">התראות</div>
+      <div class="card"><div class="srow"><div><div class="srlbl">תזכורות יומיות</div><div style="font-size:11px;color:var(--t3)">09:00 ו-20:00</div></div><div class="tgl" id="tglN" onclick="togNotif()"></div></div></div>
+      <div class="slbl">ניהול נתונים</div>
+      <div class="card">
+        <div class="srow"><div class="srlbl">איפוס יומי אוטומטי</div><div class="tgl on" id="tglReset" onclick="this.classList.toggle('on')"></div></div>
+        <div class="srow" style="cursor:pointer" onclick="clearToday()"><div class="srlbl" style="color:var(--wn)">אפס את היום הנוכחי</div></div>
+        <div class="srow" style="cursor:pointer" onclick="clearAll()"><div class="srlbl" style="color:var(--er)">מחק את כל הנתונים</div></div>
+      </div>
+    </div>
+
+  </div>
+
+  <button class="fab" id="fabEl" onclick="openMeal()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+  </button>
+
+  <div class="nav">
+    <button class="nb on" onclick="go('home',this)"><div class="ni">🏠</div><div class="nl">בית</div><div class="nd"></div></button>
+    <button class="nb" onclick="go('workout',this)"><div class="ni">💪</div><div class="nl">אימון</div><div class="nd"></div></button>
+    <button class="nb" onclick="go('history',this)"><div class="ni">📅</div><div class="nl">היסטוריה</div><div class="nd"></div></button>
+    <button class="nb" onclick="go('stats',this)"><div class="ni">📊</div><div class="nl">סטטיסטיקות</div><div class="nd"></div></button>
+    <button class="nb" onclick="go('settings',this)"><div class="ni">⚙️</div><div class="nl">הגדרות</div><div class="nd"></div></button>
+  </div>
+</div>
+
+<!-- MEAL MODAL -->
+<div class="ovl" id="mealOvl" onclick="bgClose('mealOvl',event)">
+<div class="mdl">
+  <div class="mh"></div><div class="mt">הוסף ארוחה</div>
+  <div id="recentFoods"></div>
+  <div class="fld"><label class="fl">חיפוש במאגר מזון (35+ פריטים)</label>
+    <div class="fsr"><input type="text" id="foodQ" placeholder="עוף, ביצה, אורז, שיבולת שועל..." oninput="searchFood(this.value)" autocomplete="off" autocorrect="off">
+    <div class="frs" id="foodRes"></div></div>
+  </div>
+  <div class="divider"><div class="divider-line"></div><div class="divider-txt">או הזן ידנית</div><div class="divider-line"></div></div>
+  <div class="ttabs" id="mealTabs">
+    <button class="tt on" data-icon="🌅" onclick="pickTab(this,'mealTabs')">בוקר</button>
+    <button class="tt" data-icon="☀️" onclick="pickTab(this,'mealTabs')">צהריים</button>
+    <button class="tt" data-icon="🌙" onclick="pickTab(this,'mealTabs')">ערב</button>
+    <button class="tt" data-icon="🍎" onclick="pickTab(this,'mealTabs')">חטיף</button>
+  </div>
+  <div class="fld"><label class="fl">שם המאכל</label><input class="inp" id="mNm" placeholder="שם המאכל"></div>
+  <div class="qty-row">
+    <span class="qty-lbl">כמות / גרמים</span>
+    <input class="inp" style="width:70px;text-align:center;padding:8px" type="number" id="mQty" value="100" oninput="scaleQty()">
+    <span class="qty-u">g / יח'</span>
+  </div>
+  <div class="ig3">
+    <div class="fld"><label class="fl">קלוריות</label><input class="inp" id="mCal" type="number" placeholder="0"></div>
+    <div class="fld"><label class="fl">חלבון g</label><input class="inp" id="mProt" type="number" placeholder="0"></div>
+    <div class="fld"><label class="fl">פחמימות g</label><input class="inp" id="mCarb" type="number" placeholder="0"></div>
+  </div>
+  <div class="ig">
+    <div class="fld"><label class="fl">שומן g</label><input class="inp" id="mFat" type="number" placeholder="0"></div>
+    <div class="fld"><label class="fl">סיבים g</label><input class="inp" id="mFiber" type="number" placeholder="0"></div>
+  </div>
+  <button class="subbtn" onclick="addMeal()">שמור ארוחה</button>
+</div>
+</div>
+
+<!-- WORKOUT MODAL -->
+<div class="ovl" id="wkOvl" onclick="bgClose('wkOvl',event)">
+<div class="mdl">
+  <div class="mh"></div><div class="mt">תעד אימון</div>
+  <div class="ttabs" id="wkTabs">
+    <button class="tt on" data-icon="💪" onclick="pickTab(this,'wkTabs')">כוח</button>
+    <button class="tt" data-icon="🏃" onclick="pickTab(this,'wkTabs')">ריצה</button>
+    <button class="tt" data-icon="🚴" onclick="pickTab(this,'wkTabs')">אופניים</button>
+    <button class="tt" data-icon="🏊" onclick="pickTab(this,'wkTabs')">שחייה</button>
+    <button class="tt" data-icon="🧘" onclick="pickTab(this,'wkTabs')">גמישות</button>
+  </div>
+  <div class="fld"><label class="fl">תיאור</label><input class="inp" id="wNm" placeholder="לדוגמה: כוח — גב ובטן"></div>
+  <div class="ig">
+    <div class="fld"><label class="fl">דקות</label><input class="inp" id="wDur" type="number" placeholder="0"></div>
+    <div class="fld"><label class="fl">קלוריות נשרפו</label><input class="inp" id="wCal" type="number" placeholder="0"></div>
+  </div>
+  <div class="fld" style="margin:0"><label class="fl">הערות (אופציונלי)</label><input class="inp" id="wNote" placeholder="משקל, סטים, ק&quot;מ..."></div>
+  <button class="subbtn" onclick="addWorkout()" style="margin-top:12px">שמור אימון</button>
+</div>
+</div>
+
+<script>
+// STATE — PROFILE (declared early for safety)
+var PROFILES = {
+  eli:   {name:'אלי',   av:'א', pre:'ft_eli_',   g:'m'},
+  rotem: {name:'רותם', av:'ר', pre:'ft_rotem_', g:'f'}
+};
+var AP = localStorage.getItem('ft_ap') || 'eli';
+
+// FOOD DB — 120+ items (per 100g unless u= specified)
+const FOODS=[
+  {n:'חזה עוף מבושל',cal:165,p:31,c:0,f:3.6,fb:0},
+  {n:'שוק עוף מבושל',cal:185,p:27,c:0,f:8,fb:0},
+  {n:'כנף עוף אפויה',cal:203,p:30,c:0,f:9,fb:0},
+  {n:'הודו טחון רזה',cal:170,p:29,c:0,f:5,fb:0},
+  {n:'בשר בקר רזה 90%',cal:215,p:26,c:0,f:12,fb:0},
+  {n:'סטייק אנטריקוט',cal:271,p:26,c:0,f:18,fb:0},
+  {n:'קציצות בקר',cal:250,p:20,c:5,f:17,fb:0},
+  {n:'שניצל עוף',cal:230,p:22,c:12,f:10,fb:0.5},
+  {n:'קבב טלה',cal:290,p:17,c:3,f:24,fb:0},
+  {n:'טונה בקופסאה',cal:116,p:25,c:0,f:1,fb:0},
+  {n:'סלמון מבושל',cal:208,p:20,c:0,f:13,fb:0},
+  {n:'דג נילוס מבושל',cal:128,p:26,c:0,f:2.7,fb:0},
+  {n:'שרימפס מבושל',cal:99,p:24,c:0,f:0.3,fb:0},
+  {n:'ביצה שלמה',cal:78,p:6,c:0.6,f:5,fb:0,u:50},
+  {n:'חלבון ביצה',cal:17,p:3.6,c:0.2,f:0,fb:0},
+  {n:'גבינה צהובה',cal:402,p:25,c:1.3,f:33,fb:0},
+  {n:'גבינה לבנה 5%',cal:100,p:7,c:3,f:7,fb:0},
+  {n:'קוטג 3%',cal:80,p:12,c:3,f:2.3,fb:0},
+  {n:'קוטג 0%',cal:60,p:10,c:3,f:0.5,fb:0},
+  {n:'יוגורט יווני 0%',cal:59,p:10,c:3.6,f:0.4,fb:0},
+  {n:'יוגורט רגיל 3%',cal:68,p:3.5,c:4.7,f:3.5,fb:0},
+  {n:'חלב 3%',cal:61,p:3.2,c:4.8,f:3.2,fb:0},
+  {n:'חלב 1%',cal:42,p:3.4,c:5,f:1,fb:0},
+  {n:'שיבולת שועל יבש',cal:389,p:17,c:66,f:7,fb:10},
+  {n:'אורז לבן מבושל',cal:130,p:2.7,c:28,f:0.3,fb:0.4},
+  {n:'אורז חום מבושל',cal:123,p:2.7,c:26,f:1,fb:1.8},
+  {n:'פסטה מבושלת',cal:131,p:5,c:25,f:1.1,fb:1.8},
+  {n:'פסטה מלאה מבושלת',cal:124,p:5.3,c:23,f:1.1,fb:3.4},
+  {n:'לחם מלא פרוסה',cal:80,p:4,c:15,f:1,fb:2,u:30},
+  {n:'לחם לבן פרוסה',cal:79,p:2.7,c:15,f:0.9,fb:0.6,u:25},
+  {n:'פיתה בינונית',cal:165,p:5.5,c:33,f:1,fb:2,u:70},
+  {n:'בטטה אפויה',cal:90,p:2,c:21,f:0.1,fb:3.3},
+  {n:'תפוח אדמה מבושל',cal:87,p:1.9,c:20,f:0.1,fb:1.8},
+  {n:'קינואה מבושלת',cal:120,p:4.4,c:21,f:1.9,fb:2.8},
+  {n:'כוסמת מבושלת',cal:92,p:3.4,c:20,f:0.6,fb:2.7},
+  {n:'גרנולה',cal:450,p:10,c:65,f:18,fb:5},
+  {n:'קורנפלקס',cal:357,p:7,c:84,f:0.4,fb:2},
+  {n:'עדשים מבושלות',cal:116,p:9,c:20,f:0.4,fb:7.9},
+  {n:'חומוס מבושל',cal:164,p:8.9,c:27,f:2.6,fb:7.6},
+  {n:'שעועית שחורה מבושלת',cal:132,p:8.9,c:24,f:0.5,fb:8.7},
+  {n:'טופו',cal:76,p:8,c:1.9,f:4.8,fb:0.3},
+  {n:'ברוקולי',cal:34,p:2.8,c:7,f:0.4,fb:2.6},
+  {n:'כרובית',cal:25,p:1.9,c:5,f:0.3,fb:2},
+  {n:'תרד',cal:23,p:2.9,c:3.6,f:0.4,fb:2.2},
+  {n:'חסה',cal:15,p:1.4,c:2.9,f:0.2,fb:1.3},
+  {n:'עגבנייה',cal:18,p:0.9,c:3.9,f:0.2,fb:1.2},
+  {n:'מלקפון',cal:15,p:0.7,c:3.6,f:0.1,fb:0.5},
+  {n:'גזר',cal:41,p:0.9,c:10,f:0.2,fb:2.8},
+  {n:'פלפל אדום',cal:31,p:1,c:6,f:0.3,fb:2.1},
+  {n:'פלפל צהוב',cal:27,p:1,c:6.3,f:0.2,fb:0.9},
+  {n:'זוקיני',cal:17,p:1.2,c:3.1,f:0.3,fb:1},
+  {n:'חצילים',cal:25,p:1,c:5.9,f:0.2,fb:3},
+  {n:'כרוב לבן',cal:25,p:1.3,c:5.8,f:0.1,fb:2.5},
+  {n:'בצל',cal:40,p:1.1,c:9.3,f:0.1,fb:1.7},
+  {n:'פטרייות',cal:22,p:3.1,c:3.3,f:0.3,fb:1},
+  {n:'תירס מבושל',cal:96,p:3.4,c:21,f:1.5,fb:2.4},
+  {n:'אפונה מבושלת',cal:84,p:5.4,c:15,f:0.4,fb:5.5},
+  {n:'סלק מבושל',cal:44,p:1.7,c:10,f:0.2,fb:2},
+  {n:'בננה בינונית',cal:89,p:1.1,c:23,f:0.3,fb:2.6,u:120},
+  {n:'תפוח בינוני',cal:52,p:0.3,c:14,f:0.2,fb:2.4,u:150},
+  {n:'אגס',cal:57,p:0.4,c:15,f:0.1,fb:3.1,u:150},
+  {n:'תפוז',cal:47,p:0.9,c:12,f:0.1,fb:2.4,u:130},
+  {n:'מנגו',cal:60,p:0.8,c:15,f:0.4,fb:1.6},
+  {n:'ענבים',cal:67,p:0.6,c:17,f:0.4,fb:0.9},
+  {n:'תות שדה',cal:32,p:0.7,c:7.7,f:0.3,fb:2},
+  {n:'אבטיח',cal:30,p:0.6,c:7.6,f:0.2,fb:0.4},
+  {n:'אבוקדו חצי',cal:120,p:1.5,c:6,f:11,fb:5,u:75},
+  {n:'אננס',cal:50,p:0.5,c:13,f:0.1,fb:1.4},
+  {n:'תמר מג׳הול',cal:277,p:1.8,c:75,f:0.2,fb:6.7,u:24},
+  {n:'שמן זית',cal:884,p:0,c:0,f:100,fb:0},
+  {n:'שקדים',cal:579,p:21,c:22,f:50,fb:12.5},
+  {n:'אגוזי מלוך',cal:654,p:15,c:14,f:65,fb:6.7},
+  {n:'קשיו',cal:553,p:18,c:30,f:44,fb:3.3},
+  {n:'חמאת בוטנים טבעית',cal:588,p:25,c:20,f:50,fb:6},
+  {n:'זרעי צ׳יה',cal:486,p:17,c:42,f:31,fb:34},
+  {n:'טחינה גולמית',cal:595,p:17,c:21,f:54,fb:9},
+  {n:'חומוס מטבל מנה',cal:166,p:8,c:14,f:9,fb:6,u:100},
+  {n:'פלאפל כדור',cal:57,p:2.3,c:5.5,f:3,fb:1.5,u:17},
+  {n:'שקשוקה מנה',cal:150,p:9,c:8,f:9,fb:2,u:200},
+  {n:'סלט ישראלי',cal:35,p:1,c:5,f:1.5,fb:1.5,u:100},
+  {n:'בורקס גבינה',cal:280,p:7,c:28,f:16,fb:1,u:80},
+  {n:'המבורגר 200g',cal:540,p:30,c:40,f:26,fb:2,u:200},
+  {n:'פיצה פרוסה',cal:266,p:11,c:33,f:10,fb:2,u:100},
+  {n:'שאורמה עוף פיתה',cal:480,p:35,c:45,f:14,fb:3,u:250},
+  {n:'שאורמה בקר פיתה',cal:560,p:33,c:45,f:20,fb:3,u:270},
+  {n:'סושי מקי 6 יח',cal:200,p:6,c:38,f:2,fb:1,u:120},
+  {n:'צ׳יפס מנה',cal:365,p:4,c:48,f:18,fb:3.8,u:150},
+  {n:'שניצל מסעדה',cal:350,p:28,c:18,f:18,fb:1,u:180},
+  {n:'סלט קיסר',cal:220,p:10,c:12,f:16,fb:2,u:200},
+  {n:'מרק עוף מנה',cal:80,p:6,c:8,f:2,fb:1,u:250},
+  {n:'פסטה קרבונארה',cal:380,p:14,c:42,f:18,fb:1.5,u:300},
+  {n:'סטייק 200g',cal:400,p:46,c:0,f:22,fb:0,u:200},
+  {n:'שוקולד מריר 85%',cal:598,p:8,c:22,f:43,fb:9},
+  {n:'שוקולד חלב',cal:535,p:8,c:59,f:30,fb:1.5},
+  {n:'דבש כף',cal:64,p:0.1,c:17,f:0,fb:0,u:21},
+  {n:'גלידה כדור',cal:137,p:2.3,c:16,f:7,fb:0,u:65},
+  {n:'חטיף במבה',cal:540,p:10,c:52,f:33,fb:2,u:30},
+  {n:'קפה שחור',cal:2,p:0.3,c:0,f:0,fb:0,u:240},
+  {n:'קפה הפוך/לאטה',cal:120,p:6,c:12,f:5,fb:0,u:300},
+  {n:'מיץ תפוזים טבעי',cal:45,p:0.7,c:10,f:0.2,fb:0.2,u:200},
+  {n:'קולה 330ml',cal:139,p:0,c:35,f:0,fb:0,u:330},
+  {n:'בירה 330ml',cal:153,p:1.3,c:13,f:0,fb:0,u:330},
+  {n:'יין אדום כוס',cal:125,p:0.1,c:4,f:0,fb:0,u:150},
+  {n:'פרוטאין שייק מנה',cal:120,p:25,c:5,f:1.5,fb:0,u:35},
+  {n:'אנרגיה פחית 250ml',cal:110,p:1,c:28,f:0,fb:0,u:250},
+];
+
+// STORAGE
+
+function sid(id){return document.getElementById(id);}
+function setText(id,val){var e=sid(id);if(e)e.textContent=val;}
+function setHTML(id,val){var e=sid(id);if(e)e.innerHTML=val;}
+const LS={pr:'ft2_profile',gl:'ft2_goals',td:'ft2_today',hi:'ft2_hist',sk:'ft2_streak',rc:'ft2_recent'};
+const ld=k=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):null}catch{return null}};
+const sv=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch{}};
+
+// STATE
+let prof=ld(LS.pr)||{name:'',age:28,weight:75,height:175,gender:'m',activity:'1.55'};
+let goals=ld(LS.gl)||{cal:2000,prot:150,carb:220,fat:60,water:2.5,wk:4};
+let today=ld(LS.td)||{date:'',meals:[],workouts:[],water:0,burned:0};
+let hist=ld(LS.hi)||[];
+let streak=ld(LS.sk)||0;
+let recent=ld(LS.rc)||[];
+let baseV={cal:0,p:0,c:0,f:0,fb:0};
+var favs=[];
+var wtLog=[];
+
+// DATE
+const todayStr=()=>new Date().toISOString().slice(0,10);
+const HMONS=['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'];
+const SDAYS=['א','ב','ג','ד','ה','ו','ש'];
+function greetTxt(){const h=new Date().getHours();return h<5?'לילה טוב,':h<12?'בוקר טוב,':h<17?'צהריים טובים,':h<21?'ערב טוב,':'לילה טוב,'}
+function fmtHeb(str){try{const d=new Date(str+'T12:00:00');return `${d.getDate()} ${HMONS[d.getMonth()]} ${d.getFullYear()}`}catch{return str}}
+
+// DAY RESET
+function checkReset(){
+  const td=todayStr();
+  if(today.date===td){document.getElementById('dayNotice').style.display='none';return;}
+  if(today.date&&(today.meals.length||today.workouts.length)){
+    hist.unshift({...today,wStr:fmtHeb(today.date)});
+    if(hist.length>90)hist.pop();
+    sv(LS.hi,hist);
+    const prev=new Date();prev.setDate(prev.getDate()-1);
+    streak=(today.date===prev.toISOString().slice(0,10))?streak+1:0;
+    sv(LS.sk,streak);
+  }
+  today={date:td,meals:[],workouts:[],water:0,burned:0};
+  sv(LS.td,today);
+  document.getElementById('dayNotice').style.display='flex';
+  setTimeout(()=>document.getElementById('dayNotice').style.display='none',5000);
+}
+
+// BMR/TDEE (Mifflin-St Jeor)
+function calcTDEE(){
+  const{age,weight,height,gender,activity}=prof;
+  if(!age||!weight||!height)return null;
+  const bmr=gender==='m'?(10*weight)+(6.25*height)-(5*age)+5:(10*weight)+(6.25*height)-(5*age)-161;
+  return Math.round(bmr*parseFloat(activity));
+}
+function applyTDEE(){
+  const t=calcTDEE();if(!t)return;
+  goals.cal=t;document.getElementById('gCal').value=t;sv(LS.gl,goals);ui();
+}
+
+// UI UPDATE
+function ui(){
+  const g=goals.cal||2000;
+  const tot=today.meals.reduce((s,m)=>s+(m.cal||0),0);
+  const pct=Math.min(1,tot/g);
+  document.getElementById('calRing').style.strokeDashoffset=226.19-(pct*226.19);
+  setText('calN',tot.toLocaleString());
+  setText('calPct',Math.round(pct*100)+'%');
+  setText('goalD',g.toLocaleString()+' קל\'');
+  setText('burnD',today.burned.toLocaleString()+' קל\'');
+  setText('remD',Math.max(0,g-tot).toLocaleString()+' קל\'');
+  const tp=today.meals.reduce((s,m)=>s+(m.prot||0),0);
+  const tc=today.meals.reduce((s,m)=>s+(m.carb||0),0);
+  const tf=today.meals.reduce((s,m)=>s+(m.fat||0),0);
+  setHTML('mP',Math.round(tp)+'<small>g</small>');
+  setHTML('mC',Math.round(tc)+'<small>g</small>');
+  setHTML('mF',Math.round(tf)+'<small>g</small>');
+  setHTML('mW',today.water.toFixed(1)+'<small>L</small>');
+  // water
+  const gw=goals.water||2.5;
+  const dr=document.getElementById('wDrops');
+  const tot10=10,fil=Math.min(10,Math.round((today.water/gw)*10));
+  dr.innerHTML='';
+  for(let i=0;i<tot10;i++){const d=document.createElement('div');d.className='wd'+(i<fil?' on':'');dr.appendChild(d);}
+  setText('wBdg',`${today.water.toFixed(1)} / ${gw} ל'`);
+  // workouts this week
+  const wk=weekWk();
+  setText('wkCnt',wk.length);
+  setHTML('wkMin',wk.reduce((s,w)=>s+(w.dur||0),0)+'<span>m</span>');
+  setText('wkBrn',wk.reduce((s,w)=>s+(w.cal||0),0));
+  const wp=Math.min(100,Math.round((wk.length/(goals.wk||4))*100));
+  document.getElementById('wkBar').style.width=wp+'%';
+  // streak
+  setText('stN',streak);
+  setText('stS',streak>=7?'מדהים! שבוע שלם 🏆':streak>=3?'כל הכבוד!':'התחל לאמן היום!');
+  // goals bars
+  const gpp=Math.min(100,Math.round((tp/(goals.prot||150))*100));
+  const gwp=Math.min(100,Math.round((today.water/(goals.water||2.5))*100));
+  setBar('sCP','sCB',Math.round(pct*100));
+  setBar('sPP','sPB',gpp);setBar('sWP','sWB',gwp);setBar('sKP','sKB',wp);
+  sv(LS.td,today);
+}
+function setBar(p,b,v){
+  const pe=document.getElementById(p);if(pe)pe.textContent=v+'%';
+  const be=document.getElementById(b);if(be)be.style.width=v+'%';
+}
+function weekWk(){
+  const now=new Date();const mon=new Date(now);
+  mon.setDate(now.getDate()-((now.getDay()+6)%7));mon.setHours(0,0,0,0);
+  const all=[...today.workouts,...hist.flatMap(d=>d.workouts||[])];
+  return all.filter(w=>{const wd=new Date((w.date||todayStr())+'T12:00:00');return wd>=mon;});
+}
+
+// RENDER
+function iconBg(ic){return['🌅','🍎','🧘'].includes(ic)?'bby':['🏃','🏊','🚴'].includes(ic)?'bbn':'bbl'}
+function renderMeals(){
+  const el=document.getElementById('mealList');
+  if(!today.meals.length){el.innerHTML='<div class="empty"><div class="empty-i">🍽️</div>אין ארוחות עדיין היום</div>';return;}
+  el.innerHTML=today.meals.map(function(m,i){
+    var fc=favs.indexOf(m.name)!==-1?'on':'';
+    var sub=(m.prot?Math.round(m.prot)+'g חלבון':'')+(m.carb?' · '+Math.round(m.carb)+'g פחמ':'');
+    return '<div class="li">'
+      +'<div class="lic '+iconBg(m.icon)+'">'+m.icon+'</div>'
+      +'<div class="lii"><div class="lin">'+m.name+'</div><div class="lis">'+sub+'</div></div>'
+      +"<div class='lir'><div class='liv'>"+m.cal+"</div><div class='liu'>קל'</div></div>"
+      +'<button class="fav-btn '+fc+'" onclick="togFav('+i+',this)">⭐</button>'
+      +'<button class="ldl" onclick="delMeal('+i+')">✕</button>'
+      +'</div>';
+  }).join('');
+}
+function renderWorkouts(){
+  const twEl=document.getElementById('todayWk');
+  if(!today.workouts.length){twEl.innerHTML='<div class="empty"><div class="empty-i">💪</div>אין אימון מתועד היום</div>';}
+  else twEl.innerHTML=today.workouts.map((w,i)=>`
+    <div class="li">
+      <div class="lic bbl">${w.icon}</div>
+      <div class="lii"><div class="lin">${w.name}</div><div class="lis">${w.dur} דק'${w.note?' · '+w.note:''}</div></div>
+      <span class="bdg ${w.cal?'bdg2':'bdb'}">${w.cal?w.cal+" קל'":(w.dur+' דק')}</span>
+      <button class="ldl" onclick="delWk(${i})">✕</button>
+    </div>`).join('');
+  const wkEl=document.getElementById('wkList');
+  const wk=weekWk();
+  if(!wk.length){wkEl.innerHTML='<div class="empty"><div class="empty-i">🏋️</div>אין אימונים השבוע</div>';return;}
+  wkEl.innerHTML=wk.map(w=>`
+    <div class="li">
+      <div class="lic bbl">${w.icon}</div>
+      <div class="lii"><div class="lin">${w.name}</div><div class="lis">${w.date&&w.date!==todayStr()?fmtHeb(w.date):'היום'} · ${w.dur} דק'</div></div>
+      <span class="bdg ${w.cal?'bdg2':'bdb'}">${w.cal?w.cal+" קל'":(w.dur+' דק')}</span>
+    </div>`).join('');
+}
+function renderHistory(){
+  const el=document.getElementById('histList');
+  setText('histCnt',hist.length+' ימים');
+  if(!hist.length){el.innerHTML='<div class="empty"><div class="empty-i">📅</div>בסוף כל יום הנתונים ישמרו כאן</div>';return;}
+  el.innerHTML=hist.map(d=>{
+    const tot=(d.meals||[]).reduce((s,m)=>s+(m.cal||0),0);
+    const pp=Math.min(100,Math.round((tot/(goals.cal||2000))*100));
+    return `<div class="hday">
+      <div class="hdr2"><span class="hdate">${d.wStr||fmtHeb(d.date)}</span><span class="hcal">${tot.toLocaleString()} קל'</span></div>
+      <div style="font-size:11px;color:var(--t3);margin-bottom:5px">${(d.meals||[]).length} ארוחות · ${(d.workouts||[]).length} אימונים · ${d.water.toFixed(1)}L</div>
+      <div class="pb"><div class="pbf" style="width:${pp}%;background:var(--a)"></div></div>
+    </div>`;
+  }).join('');
+}
+function renderCharts(){
+  const now=new Date();const last7=[];
+  for(let i=6;i>=0;i--){
+    const d=new Date(now);d.setDate(d.getDate()-i);
+    const str=d.toISOString().slice(0,10);
+    if(str===today.date){last7.push({cal:today.meals.reduce((s,m)=>s+(m.cal||0),0),prot:today.meals.reduce((s,m)=>s+(m.prot||0),0),d});}
+    else{const h=hist.find(x=>x.date===str);last7.push(h?{cal:(h.meals||[]).reduce((s,m)=>s+(m.cal||0),0),prot:(h.meals||[]).reduce((s,m)=>s+(m.prot||0),0),d}:{cal:0,prot:0,d});}
+  }
+  buildChart('calChart',last7.map(x=>x.cal),last7.map(x=>x.d),'#3B82F6');
+  buildChart('protChart',last7.map(x=>x.prot),last7.map(x=>x.d),'#059669');
+}
+function buildChart(id,data,dates,color){
+  const el=document.getElementById(id);if(!el)return;
+  const max=Math.max(...data,1);
+  el.innerHTML=data.map((v,i)=>{
+    const pct=Math.round((v/max)*80)||0;
+    const isT=dates[i].toDateString()===new Date().toDateString();
+    return `<div class="bcol"><div class="bbar" style="height:${pct}%;background:${isT?color:'#E5E7EB'}"></div><div class="bday" style="color:${isT?color:'var(--t3)'}">${SDAYS[dates[i].getDay()]}</div></div>`;
+  }).join('');
+}
+
+// FOOD SEARCH
+let sTO;
+function searchFood(q){
+  clearTimeout(sTO);
+  const res=document.getElementById('foodRes');
+  if(!q.trim()){res.classList.remove('on');return;}
+  sTO=setTimeout(()=>{
+    const m=FOODS.filter(f=>f.n.includes(q)||q.split(' ').every(w=>f.n.includes(w))).slice(0,8);
+    if(!m.length){res.innerHTML='<div class="fri"><div class="frn" style="color:var(--t3)">לא נמצא — הזן ידנית</div></div>';res.classList.add('on');return;}
+    res.innerHTML=m.map(f=>`
+      <div class="fri" onclick="selFood(${FOODS.indexOf(f)})">
+        <div class="frn">${f.n}</div>
+        <div class="frs2">${f.cal} קל' · ${f.p}g חלבון · ${f.c}g פחמ · ${f.f}g שומן (ל-${f.u||100}g)</div>
+      </div>`).join('');
+    res.classList.add('on');
+  },200);
+}
+function selFood(i){
+  const f=FOODS[i];const dq=f.u||100;
+  baseV={cal:f.cal,p:f.p,c:f.c,f:f.f,fb:f.fb||0};
+  document.getElementById('mNm').value=f.n;
+  document.getElementById('mQty').value=dq;
+  document.getElementById('mCal').value=Math.round(f.cal*(dq/100));
+  document.getElementById('mProt').value=+(f.p*(dq/100)).toFixed(1);
+  document.getElementById('mCarb').value=+(f.c*(dq/100)).toFixed(1);
+  document.getElementById('mFat').value=+(f.f*(dq/100)).toFixed(1);
+  document.getElementById('mFiber').value=+((f.fb||0)*(dq/100)).toFixed(1);
+  document.getElementById('foodQ').value='';
+  document.getElementById('foodRes').classList.remove('on');
+}
+function scaleQty(){
+  if(!baseV.cal)return;
+  const q=parseFloat(document.getElementById('mQty').value)||100;const s=q/100;
+  document.getElementById('mCal').value=Math.round(baseV.cal*s);
+  document.getElementById('mProt').value=+(baseV.p*s).toFixed(1);
+  document.getElementById('mCarb').value=+(baseV.c*s).toFixed(1);
+  document.getElementById('mFat').value=+(baseV.f*s).toFixed(1);
+  document.getElementById('mFiber').value=+(baseV.fb*s).toFixed(1);
+}
+function renderRecent(){
+  var el=document.getElementById('recentFoods');if(!el)return;
+  var out='';
+  if(recent.length){
+    out+='<div style="margin-bottom:10px"><div class="fl" style="margin-bottom:5px">אחרונים</div><div class="rfood">';
+    recent.slice(0,5).forEach(function(n,i){
+      out+='<div class="rfitem" onclick="quickRIdx('+i+',false)">⏰ '+(n.length>13?n.slice(0,13)+'…':n)+'</div>';
+    });
+    out+='</div></div>';
+  }
+  el.innerHTML=out;
+}
+
+function quickRIdx(i,fav){var n=fav?favs[i]:recent[i];if(n)quickR(n);}
+function quickR(name){
+  document.getElementById('mNm').value=name;
+  const m=today.meals.find(m=>m.name===name)||hist.flatMap(d=>d.meals||[]).find(m=>m.name===name);
+  if(m){document.getElementById('mCal').value=m.cal;document.getElementById('mProt').value=m.prot||0;document.getElementById('mCarb').value=m.carb||0;document.getElementById('mFat').value=m.fat||0;}
+}
+
+// ADD / DELETE
+function addMeal(){
+  const name=document.getElementById('mNm').value.trim();
+  const cal=Math.round(parseFloat(document.getElementById('mCal').value)||0);
+  const prot=parseFloat(document.getElementById('mProt').value)||0;
+  const carb=parseFloat(document.getElementById('mCarb').value)||0;
+  const fat=parseFloat(document.getElementById('mFat').value)||0;
+  const fiber=parseFloat(document.getElementById('mFiber').value)||0;
+  const icon=document.querySelector('#mealTabs .tt.on')?.dataset.icon||'🍎';
+  if(!name||!cal){alert('נא למלא שם וקלוריות');return;}
+  today.meals.push({name,cal,prot:+prot.toFixed(1),carb:+carb.toFixed(1),fat:+fat.toFixed(1),fiber,icon,time:new Date().toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'})});
+  if(!recent.includes(name)){recent.unshift(name);if(recent.length>10)recent.pop();sv(LS.rc,recent);}
+  baseV={cal:0,p:0,c:0,f:0,fb:0};
+  ['mNm','mCal','mProt','mCarb','mFat','mFiber','foodQ'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=id==='mQty'?'100':'';});
+  document.getElementById('foodRes').classList.remove('on');
+  document.getElementById('mealOvl').classList.remove('on');
+  renderMeals();ui();
+}
+function delMeal(i){today.meals.splice(i,1);renderMeals();ui();}
+function addWorkout(){
+  const name=document.getElementById('wNm').value.trim();
+  const dur=parseInt(document.getElementById('wDur').value)||0;
+  const cal=parseInt(document.getElementById('wCal').value)||0;
+  const note=document.getElementById('wNote').value.trim();
+  const icon=document.querySelector('#wkTabs .tt.on')?.dataset.icon||'💪';
+  if(!name||!dur){alert('נא למלא שם ודקות');return;}
+  today.workouts.push({name,dur,cal,note,icon,date:todayStr()});
+  today.burned+=cal;
+  ['wNm','wDur','wCal','wNote'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
+  document.getElementById('wkOvl').classList.remove('on');
+  renderWorkouts();ui();
+}
+function delWk(i){today.burned-=(today.workouts[i].cal||0);today.workouts.splice(i,1);renderWorkouts();ui();}
+function addWater(a){today.water=Math.round((today.water+a)*10)/10;ui();}
+
+// PROFILE / GOALS
+function saveProf(){
+  prof.name=document.getElementById('sName').value.trim();
+  prof.age=parseInt(document.getElementById('sAge').value)||28;
+  prof.weight=parseFloat(document.getElementById('sWt').value)||75;
+  prof.height=parseFloat(document.getElementById('sHt').value)||175;
+  prof.gender=document.querySelector('#gTab .tt.on')?.dataset.v||'m';
+  prof.activity=document.getElementById('sAct').value;
+  var wg=document.getElementById('sWtG');prof.wtGoal=wg?parseFloat(wg.value)||null:null;
+  sv(LS.pr,prof);updateHeader();
+  const t=calcTDEE();setText('tdeeV',t?t+' קל\'':'—');
+}
+function saveGoals(){
+  goals.cal=parseInt(document.getElementById('gCal').value)||2000;
+  goals.prot=parseInt(document.getElementById('gProt').value)||150;
+  goals.carb=parseInt(document.getElementById('gCarb').value)||220;
+  goals.fat=parseInt(document.getElementById('gFat').value)||60;
+  goals.water=parseFloat(document.getElementById('gWat').value)||2.5;
+  goals.wk=parseInt(document.getElementById('gWk').value)||4;
+  sv(LS.gl,goals);ui();
+}
+function updateHeader(){
+  var p=PROFILES[AP];
+  var n=prof.name||p.name;
+  var hn=document.getElementById('hdrN');if(hn)hn.textContent=n+' 👋';
+  var al=document.getElementById('avLtr');if(al)al.textContent=p.av;
+  var an=document.getElementById('avNm');if(an)an.textContent=n;
+  var gr=document.getElementById('greet');if(gr)gr.textContent=greetTxt();
+}
+function loadSettings(){
+  document.getElementById('sName').value=prof.name||'';
+  document.getElementById('sAge').value=prof.age||'';
+  document.getElementById('sWt').value=prof.weight||'';
+  document.getElementById('sHt').value=prof.height||'';
+  document.getElementById('sAct').value=prof.activity||'1.55';
+  document.getElementById('gCal').value=goals.cal;
+  document.getElementById('gProt').value=goals.prot;
+  document.getElementById('gCarb').value=goals.carb;
+  document.getElementById('gFat').value=goals.fat;
+  document.getElementById('gWat').value=goals.water;
+  document.getElementById('gWk').value=goals.wk;
+  var wg=document.getElementById('sWtG');if(wg)wg.value=prof.wtGoal||'';
+  document.querySelectorAll('#gTab .tt').forEach(t=>t.classList.toggle('on',t.dataset.v===prof.gender));
+  const t=calcTDEE();setText('tdeeV',t?t+' קל\'':'—');
+}
+
+// NAV
+function go(name,btn){
+  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));
+  document.getElementById('pg-'+name).classList.add('on');
+  if(btn)btn.classList.add('on');
+  else{const m={home:0,workout:1,history:2,stats:3,settings:4};document.querySelectorAll('.nb')[m[name]]?.classList.add('on');}
+  document.getElementById('scrl').scrollTop=0;
+  const fab=document.getElementById('fabEl');
+  if(name==='home'){fab.style.display='flex';fab.onclick=openMeal;}
+  else if(name==='workout'){fab.style.display='flex';fab.onclick=openWorkout;}
+  else fab.style.display='none';
+  if(name==='stats')setTimeout(renderCharts,60);
+  if(name==='history'){renderHistory();renderWt();renderWeekly();renderAch();}
+  if(name==='settings')loadSettings();
+}
+function openMeal(){renderFavsPanel();document.getElementById('mealOvl').classList.add('on');}
+function openWorkout(){document.getElementById('wkOvl').classList.add('on');}
+function bgClose(id,e){if(e.target===document.getElementById(id))document.getElementById(id).classList.remove('on');}
+function pickTab(el,gid){document.querySelectorAll('#'+gid+' .tt').forEach(t=>t.classList.remove('on'));el.classList.add('on');}
+
+// DATA MANAGEMENT
+function clearToday(){if(!confirm('לאפס את כל נתוני היום?'))return;today.meals=[];today.workouts=[];today.water=0;today.burned=0;sv(LS.td,today);renderMeals();renderWorkouts();ui();}
+function clearAll(){if(!confirm('למחוק את כל הנתונים לצמיתות?'))return;Object.values(LS).forEach(k=>localStorage.removeItem(k));location.reload();}
+
+// HEADER DATE
+function setHeader(){
+  const d=new Date();
+  setText('hdrDate',d.getDate()+' '+HMONS[d.getMonth()]);
+}
+
+// PWA
+let dP;
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();dP=e;document.getElementById('pwaW').style.display='block';});
+document.getElementById('pwaBtn').addEventListener('click',async()=>{if(!dP)return;dP.prompt();await dP.userChoice;dP=null;});
+if('serviceWorker'in navigator){navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(s){s.unregister();});});}
+
+// BOOT
+checkReset();
+setHeader();
+updateHeader();
+renderMeals();
+renderWorkouts();
+ui();
+setTimeout(()=>document.getElementById('sp').classList.add('gone'),1100);
+document.addEventListener('click',e=>{if(!e.target.closest('.fsr'))document.getElementById('foodRes')?.classList.remove('on');});
+// Check reset once per minute (for long sessions)
+setInterval(checkReset,60000);
+
+
+function selProf(p) {
+  AP = p;
+  document.querySelectorAll('.ps-card').forEach(function(c){c.classList.remove('sel');});
+  var el = document.getElementById('ps-'+p); if(el) el.classList.add('sel');
+}
+function showPS() {
+  var el = document.getElementById('profileScreen'); if(el) el.classList.remove('gone');
+  selProf(AP);
+}
+function enterApp() {
+  localStorage.setItem('ft_ap', AP);
+  var el = document.getElementById('profileScreen'); if(el) el.classList.add('gone');
+  initProfile();
+}
+function pfx() { return PROFILES[AP].pre; }
+function initProfile() {
+  LS.pr = pfx()+'prof'; LS.gl = pfx()+'goals';
+  LS.td = pfx()+'today'; LS.hi = pfx()+'hist';
+  LS.sk = pfx()+'streak'; LS.rc = pfx()+'recent';
+  prof    = ld(LS.pr)  || {name:PROFILES[AP].name, age:28, weight:70, height:170, gender:PROFILES[AP].g, activity:'1.55', wtGoal:null};
+  goals   = ld(LS.gl)  || {cal:2000, prot:150, carb:220, fat:60, water:2.5, wk:4};
+  today   = ld(LS.td)  || {date:'', meals:[], workouts:[], water:0, burned:0};
+  hist    = ld(LS.hi)  || [];
+  streak  = ld(LS.sk)  || 0;
+  recent  = ld(LS.rc)  || [];
+  wtLog   = ld(pfx()+'wt') || [];
+  favs    = ld(pfx()+'favs') || [];
+  checkReset();
+  renderMeals(); renderWorkouts(); ui(); updateHeader();
+  showQuote(); renderWt();
+  var tn = document.getElementById('tglN');
+  if(tn && ld('ft_notif')==='1') tn.classList.add('on');
+}
+
+// === WEIGHT ==================================================
+var wtLog = [];
+function saveWt() { sv(pfx()+'wt', wtLog); }
+function logWt() {
+  var w = prompt('הזן משקל נוכחי (ק"ג):');
+  if(!w || isNaN(parseFloat(w))) return;
+  wtLog = wtLog.filter(function(x){return x.date !== todayStr();});
+  wtLog.unshift({date:todayStr(), w:parseFloat(w)});
+  if(wtLog.length>90) wtLog.pop();
+  saveWt();
+  prof.weight = parseFloat(w); sv(LS.pr, prof);
+  var el = document.getElementById('sWt'); if(el) el.value = w;
+  renderWt();
+}
+function renderWt() {
+  var chart = document.getElementById('wtChart');
+  var list  = document.getElementById('wtList');
+  if(!chart || !wtLog.length) return;
+  var last = wtLog.slice(0,7).slice().reverse();
+  var vals = last.map(function(x){return x.w;});
+  var mn = Math.min.apply(null,vals)*0.98, mx = Math.max.apply(null,vals)*1.02;
+  chart.innerHTML = last.map(function(x){
+    var pct = Math.round(((x.w-mn)/(mx-mn||1))*70)+10;
+    var isT = x.date===todayStr();
+    return '<div class="bcol"><div class="bbar" style="height:'+pct+'%;background:'+(isT?'#7C3AED':'#DDD8FE')+'"></div>'
+          +'<div class="bday" style="color:'+(isT?'#7C3AED':'var(--t3)')+'">'+x.w+'</div></div>';
+  }).join('');
+  if(list) list.innerHTML = wtLog.slice(0,4).map(function(x,i){
+    var prev = wtLog[i+1];
+    var diff = prev ? +(x.w-prev.w).toFixed(1) : null;
+    var cls  = diff===null?'':diff>0?'wt-up':'wt-dn';
+    var arr  = diff===null?'':diff>0?'▲'+diff:'▼'+Math.abs(diff);
+    return '<div class="wt-row"><span class="wt-date">'+fmtHeb(x.date).slice(0,6)+'</span>'
+          +'<span class="wt-val">'+x.w+' ק"ג</span>'
+          +(diff!==null?'<span class="'+cls+'">'+arr+'</span>':'')+'</div>';
+  }).join('');
+}
+
+// === WEEKLY SUMMARY ==========================================
+function renderWeekly() {
+  var now = new Date(), mon = new Date(now);
+  mon.setDate(now.getDate()-((now.getDay()+6)%7)); mon.setHours(0,0,0,0);
+  var days = [];
+  for(var i=0;i<7;i++){
+    var d=new Date(mon); d.setDate(mon.getDate()+i);
+    var s=d.toISOString().slice(0,10);
+    if(s===todayStr()) days.push(today);
+    else { var h=hist.find(function(x){return x.date===s;}); if(h) days.push(h); }
+  }
+  var n = days.length || 1;
+  var calA  = Math.round(days.reduce(function(s,d){return s+(d.meals||[]).reduce(function(a,m){return a+(m.cal||0);},0);},0)/n);
+  var protA = Math.round(days.reduce(function(s,d){return s+(d.meals||[]).reduce(function(a,m){return a+(m.prot||0);},0);},0)/n);
+  var watA  = (days.reduce(function(s,d){return s+(d.water||0);},0)/n).toFixed(1);
+  var wkC   = days.reduce(function(s,d){return s+(d.workouts||[]).length;},0);
+  function sid(id){return document.getElementById(id);}
+  if(sid('wsC'))  sid('wsC').textContent  = calA  || '—';
+  if(sid('wsP'))  sid('wsP').textContent  = protA || '—';
+  if(sid('wsWt')) sid('wsWt').textContent = watA  || '—';
+  if(sid('wsW'))  sid('wsW').textContent  = wkC   || '—';
+  var sun = new Date(mon.getTime()+6*86400000);
+  var rng = mon.getDate()+' '+HMONS[mon.getMonth()]+' — '+sun.getDate()+' '+HMONS[sun.getMonth()];
+  if(sid('wkRange')) sid('wkRange').textContent = rng;
+}
+
+// === ACHIEVEMENTS ============================================
+var ACHS = [
+  {ic:'🍽️', nm:'ארוחה ראשונה', fn:function(){return today.meals.length>0;}},
+  {ic:'🔥', nm:'3 ימי רצף',   fn:function(){return streak>=3;}},
+  {ic:'🏆', nm:'שבוע רצף',  fn:function(){return streak>=7;}},
+  {ic:'👑', nm:'חודש רצף',  fn:function(){return streak>=30;}},
+  {ic:'🎯', nm:'פגעת ביעד', fn:function(){var t=today.meals.reduce(function(s,m){return s+(m.cal||0);},0),g=goals.cal||2000;return t>=g*.9&&t<=g*1.1;}},
+  {ic:'💧', nm:'יעד שתייה', fn:function(){return today.water>=(goals.water||2.5);}},
+  {ic:'💪', nm:'אימון ראשון', fn:function(){return today.workouts.length>0;}},
+  {ic:'🏋️', nm:'5 אימונים', fn:function(){return weekWk().length>=5;}},
+  {ic:'⚖️', nm:'עדכנת משקל', fn:function(){return wtLog.length>0;}},
+  {ic:'🌟', nm:'10 ארוחות', fn:function(){return hist.flatMap(function(d){return d.meals||[];}).length+today.meals.length>=10;}},
+  {ic:'🍖', nm:'יעד חלבון', fn:function(){return today.meals.reduce(function(s,m){return s+(m.prot||0);},0)>=(goals.prot||150);}},
+  {ic:'📅', nm:'שבוע מתועד', fn:function(){return hist.length>=7;}},
+];
+function renderAch() {
+  var grid = document.getElementById('achGrid'); if(!grid) return;
+  var cnt  = ACHS.filter(function(a){return a.fn();}).length;
+  var cel  = document.getElementById('achCnt'); if(cel) cel.textContent = cnt+'/'+ACHS.length;
+  grid.innerHTML = ACHS.map(function(a){
+    var ok = a.fn();
+    return '<div class="ach"><div class="ach-ic '+(ok?'ok':'')+'">'+a.ic+'</div>'
+          +'<div class="ach-nm '+(ok?'ok':'')+'">'+a.nm+'</div></div>';
+  }).join('');
+}
+
+// === FAVORITES ===============================================
+var favs = [];
+function saveFavs() { sv(pfx()+'favs', favs); }
+function togFav(idx, btn) {
+  var name = today.meals[idx] && today.meals[idx].name; if(!name) return;
+  var i = favs.indexOf(name);
+  if(i!==-1){ favs.splice(i,1); btn.classList.remove('on'); }
+  else{ favs.unshift(name); if(favs.length>20) favs.pop(); btn.classList.add('on'); }
+  saveFavs();
+}
+function renderFavsPanel() {
+  var el = document.getElementById('recentFoods'); if(!el) return;
+  var out = '';
+  if(favs.length){
+    out += '<div style="margin-bottom:6px"><div class="fl" style="margin-bottom:5px">⭐ מועדפים</div><div class="rfood">';
+    favs.slice(0,4).forEach(function(n,i){
+      out += '<div class="rfitem" onclick="qrIdx('+i+',true)">⭐ '+(n.length>12?n.slice(0,12)+'…':n)+'</div>';
+    });
+    out += '</div></div>';
+  }
+  if(recent.length){
+    out += '<div style="margin-bottom:10px"><div class="fl" style="margin-bottom:5px">אחרונים</div><div class="rfood">';
+    recent.slice(0,4).forEach(function(n,i){
+      out += '<div class="rfitem" onclick="qrIdx('+i+',false)">⏰ '+(n.length>12?n.slice(0,12)+'…':n)+'</div>';
+    });
+    out += '</div></div>';
+  }
+  el.innerHTML = out;
+}
+function qrIdx(i, isFav) {
+  var name = isFav ? favs[i] : recent[i]; if(!name) return;
+  document.getElementById('mNm').value = name;
+  var m = today.meals.find(function(x){return x.name===name;}) ||
+          hist.flatMap(function(d){return d.meals||[];}).find(function(x){return x.name===name;});
+  if(m){
+    document.getElementById('mCal').value  = m.cal||0;
+    document.getElementById('mProt').value = m.prot||0;
+    document.getElementById('mCarb').value = m.carb||0;
+    document.getElementById('mFat').value  = m.fat||0;
+  }
+}
+
+// === COPY YESTERDAY ==========================================
+function copyYest() {
+  if(!hist.length){ alert('אין נתונים מאתמול'); return; }
+  var yest = hist[0];
+  if(!(yest.meals||[]).length){ alert('לא היו ארוחות אתמול'); return; }
+  if(!confirm('להעתיק '+yest.meals.length+' ארוחות?')) return;
+  yest.meals.forEach(function(m){ today.meals.push(Object.assign({},m)); });
+  renderMeals(); ui();
+}
+
+// === QUOTES ==================================================
+var QTS = [
+  {t:'הגוף משיג מה שהמוח מאמין', s:'— נפוליאון היל'},
+  {t:'כל יום הוא הזדמנות להיות טוב יותר מאתמול', s:'— אנונימי'},
+  {t:'אל תעצור כשאתה עייף. עצור כשאתה סיימת.', s:'— אנונימי'},
+  {t:'הבריאות היא ההשקעה הטובה ביותר שתעשה', s:'— אנונימי'},
+  {t:'שינוי לא קורה בבת אחת. הוא קורה כל יום.', s:'— אנונימי'},
+  {t:'קח טיפול בגופך — זה המקום היחידי שיש לך לגור בו', s:'— ג׳ים רוהן'},
+  {t:'כל אימון הוא צעד קדימה', s:'— FitTrack'},
+  {t:'אתה לא צריך להיות מהיר. רק לצאת.', s:'— אנונימי'},
+];
+function showQuote() {
+  var q = QTS[new Date().getDay() % QTS.length];
+  var te = document.getElementById('qTxt'); if(te) te.textContent = q.t;
+  var se = document.getElementById('qSrc'); if(se) se.textContent = q.s;
+}
+
+// === NOTIFICATIONS ===========================================
+function togNotif() {
+  var el = document.getElementById('tglN'); if(!el) return;
+  var on = el.classList.toggle('on');
+  sv('ft_notif', on?'1':'0');
+  if(on){
+    if(!('Notification' in window)){ alert('הדפדפן לא תומך בהתראות'); el.classList.remove('on'); return; }
+    Notification.requestPermission().then(function(p){
+      if(p==='granted'){ try{new Notification('FitTrack ✅',{body:'תקבל תזכורות ב-9:00 וב-20:00',icon:'icon-192.png'});}catch(e){} }
+      else{ el.classList.remove('on'); }
+    });
+  }
+}
+setInterval(function(){
+  var now=new Date(), h=now.getHours(), m=now.getMinutes();
+  if(m!==0) return;
+  var key='ft_n_'+h+'_'+now.toDateString();
+  if(ld(key)||Notification.permission!=='granted') return;
+  sv(key,'1');
+  var nm = prof.name||'ספורטאי';
+  if(h===9){ try{new Notification('🌅 בוקר טוב '+nm+'!',{body:'זמן לעדכן את ארוחת הבוקר',icon:'icon-192.png'});}catch(e){} }
+  if(h===20){ var r=Math.max(0,(goals.cal||2000)-today.meals.reduce(function(s,m){return s+(m.cal||0);},0));
+    try{new Notification('🌙 ערב טוב '+nm+'!',{body:r>100?'נותרו '+r+' קלוריות':'עמדת ביעד! 🏆',icon:'icon-192.png'});}catch(e){} }
+},60000);
+
+// === BOOT ====================================================
+initProfile();
+setHeader();
+showQuote();
+renderWt();
+setTimeout(function(){document.getElementById('sp').classList.add('gone');},1100);
+document.addEventListener('click',function(e){if(!e.target.closest('.fsr')){var fr=document.getElementById('foodRes');if(fr)fr.classList.remove('on');}});
+setInterval(checkReset,60000);
+
+</script>
+</body>
+</html>
